@@ -33,9 +33,51 @@ struct node{
 	struct node *right;
 };
 
-
+struct node * balancedBST(struct node *root, int *arr, int start, int end);
+struct node * SortedArraytoBST_insert(struct node *root, int data);
+struct node * SortedArraytoBST_newNode(int data);
 struct node * convert_array_to_bst(int *arr, int len){
-	
-	return NULL;
+	if (!arr || len < 1) {
+		return NULL;
+	}
+	struct node *root = NULL;
+	root = balancedBST(root, arr, 0, len - 1);
+	return root;
+}
+
+
+struct node * SortedArraytoBST_newNode(int data)
+{
+	struct node *temp = (struct node *)malloc(sizeof(struct node));
+	temp->data = data;
+	temp->left = NULL;
+	temp->right = NULL;
+	return temp;
+}
+
+struct node * SortedArraytoBST_insert(struct node *root, int data) {
+	if (!root) {
+		return SortedArraytoBST_newNode(data);
+	}
+	else if (data < root->data) {
+		root->left = SortedArraytoBST_insert(root->left, data);
+	}
+	else {
+		root->right = SortedArraytoBST_insert(root->right, data);
+	}
+	return root;
+}
+
+struct node * balancedBST(struct node *root, int *arr, int start, int end) {
+	if (start > end) {
+		return root;
+	}
+	int mid = (start + end) / 2;
+	root = SortedArraytoBST_insert(root, arr[mid]);
+	int leftEnd = mid - 1;
+	root = balancedBST(root, arr, start, leftEnd);
+	start = mid + 1;
+	root = balancedBST(root, arr, start, end);
+	return root;
 }
 
